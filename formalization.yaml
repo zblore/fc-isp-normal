@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+
+version: "v0.4"
+
+project:
+  name: "fc-isp-normal"
+  description: >-
+    A machine-checked proof that every normal operator on a complex Hilbert space of dimension
+    at least two has a nontrivial closed invariant subspace, against the definitions of Formal
+    Conjectures' invariant subspace problem file.
+  authors:
+    - "Zayn Blore"
+  license: "Apache-2.0"
+
+sources:
+  - title: "Invariant subspace problem"
+    authors:
+      - "Wikipedia contributors"
+    id: "https://en.wikipedia.org/wiki/Invariant_subspace_problem"
+    type: "website"
+    location: "The known special cases, including normal operators"
+    relationship: "formalizes"
+    author_endorsement: "n/a"
+
+related_formalizations:
+  - id: "https://github.com/google-deepmind/formal-conjectures/blob/40a8592cb6f7e96cb9a8275d96bb3e013feeb1dc/FormalConjectures/Wikipedia/InvariantSubspaceProblem.lean"
+    relationship: "builds-on"
+    note: >-
+      Supplies the statement
+      `InvariantSubspaceProblem.Invariant_subspace_problem_normal_operator` and the structure
+      `ClosedInvariantSubspace` it uses. This repository depends on Formal Conjectures at that
+      commit and proves the same proposition without using the declaration left as `sorry`
+      there.
+
+classification:
+  arxiv:
+    - "math.FA"
+    - "math.OA"
+  msc2020:
+    - "47A15"
+    - "47B15"
+
+automation:
+  methods:
+    - method: "agent"
+      models:
+        - "Claude Opus 5.5"
+      framework: "Claude Code"
+  notes: "I drafted the Lean with Claude Code."
+
+review:
+  status: "author-verified"
+  reviewers:
+    - "Zayn Blore"
+  notes: >-
+    Checks run: statement term-identical to Formal Conjectures'
+    `Invariant_subspace_problem_normal_operator`; axioms limited to propext, Classical.choice
+    and Quot.sound; controls show the theorem applies (the zero operator on ℂ²) and
+    that the dimension hypothesis is needed (on ℂ no such subspace exists); `lake build` with
+    Mathlib's standard linter set, `lake exe lint-style ISPNormal` and
+    `lake exe runLinter ISPNormal` pass; the audits in `audit/` pass.
+
+status:
+  scope: >-
+    Full proof of the single Formal Conjectures statement
+    `Invariant_subspace_problem_normal_operator`.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms:
+    - "propext"
+    - "Classical.choice"
+    - "Quot.sound"
+  main_results:
+    - description: >-
+        Every normal operator on a complex Hilbert space of dimension at least two has a
+        nontrivial closed invariant subspace.
+      declaration: "ISPNormal.invariant_subspace_problem_normal_operator"
+      file: "ISPNormal/Normal.lean"
+      sorry_count: 0
+      axioms:
+        - "propext"
+        - "Classical.choice"
+        - "Quot.sound"
+
+fidelity:
+  divergences: >-
+    None in the statement, which is Formal Conjectures' own. The argument is the standard one
+    that Formal Conjectures' docstring sketches. A normal operator whose spectrum is a single
+    point is a multiple of the identity. Otherwise, continuous bump functions at two spectral
+    points give a nonzero operator f(T) commuting with T whose kernel is nonzero. Both steps
+    use Mathlib's continuous functional calculus, including its spectral mapping theorem, in
+    place of the projection-valued spectral measure.
+
+alignment:
+  namespaces:
+    - "ISPNormal"
+  statements:
+    - source: "Formal Conjectures, InvariantSubspaceProblem.Invariant_subspace_problem_normal_operator"
+      lean: "ISPNormal.invariant_subspace_problem_normal_operator"
+      module: "ISPNormal.Normal"
+      status: "proved"
+
+acknowledgements: >-
+  Thanks to the authors of Lean 4, Mathlib and Formal Conjectures.
